@@ -1,5 +1,6 @@
 import {
   ChainId,
+  CHAIN_ID_ONE,
   CHAIN_ID_BSC,
   CHAIN_ID_ETH,
   CHAIN_ID_SOLANA,
@@ -55,6 +56,8 @@ import {
 import {
   COVALENT_GET_TOKENS_URL,
   SOLANA_HOST,
+  WONE_ADDRESS,
+  WONE_DECIMALS,
   WBNB_ADDRESS,
   WBNB_DECIMALS,
   WETH_ADDRESS,
@@ -194,20 +197,20 @@ const createNativeEthParsedTokenAccount = (
   return !(provider && signerAddress)
     ? Promise.reject()
     : provider.getBalance(signerAddress).then((balanceInWei) => {
-        const balanceInEth = ethers.utils.formatEther(balanceInWei);
-        return createParsedTokenAccount(
-          signerAddress, //public key
-          WETH_ADDRESS, //Mint key, On the other side this will be WETH, so this is hopefully a white lie.
-          balanceInWei.toString(), //amount, in wei
-          WETH_DECIMALS, //Luckily both ETH and WETH have 18 decimals, so this should not be an issue.
-          parseFloat(balanceInEth), //This loses precision, but is a limitation of the current datamodel. This field is essentially deprecated
-          balanceInEth.toString(), //This is the actual display field, which has full precision.
-          "ETH", //A white lie for display purposes
-          "Ethereum", //A white lie for display purposes
-          undefined, //TODO logo
-          true //isNativeAsset
-        );
-      });
+      const balanceInEth = ethers.utils.formatEther(balanceInWei);
+      return createParsedTokenAccount(
+        signerAddress, //public key
+        WETH_ADDRESS, //Mint key, On the other side this will be WETH, so this is hopefully a white lie.
+        balanceInWei.toString(), //amount, in wei
+        WETH_DECIMALS, //Luckily both ETH and WETH have 18 decimals, so this should not be an issue.
+        parseFloat(balanceInEth), //This loses precision, but is a limitation of the current datamodel. This field is essentially deprecated
+        balanceInEth.toString(), //This is the actual display field, which has full precision.
+        "ETH", //A white lie for display purposes
+        "Ethereum", //A white lie for display purposes
+        undefined, //TODO logo
+        true //isNativeAsset
+      );
+    });
 };
 
 const createNativeBscParsedTokenAccount = (
@@ -217,22 +220,44 @@ const createNativeBscParsedTokenAccount = (
   return !(provider && signerAddress)
     ? Promise.reject()
     : provider.getBalance(signerAddress).then((balanceInWei) => {
-        const balanceInEth = ethers.utils.formatEther(balanceInWei);
-        return createParsedTokenAccount(
-          signerAddress, //public key
-          WBNB_ADDRESS, //Mint key, On the other side this will be WBNB, so this is hopefully a white lie.
-          balanceInWei.toString(), //amount, in wei
-          WBNB_DECIMALS, //Luckily both BNB and WBNB have 18 decimals, so this should not be an issue.
-          parseFloat(balanceInEth), //This loses precision, but is a limitation of the current datamodel. This field is essentially deprecated
-          balanceInEth.toString(), //This is the actual display field, which has full precision.
-          "BNB", //A white lie for display purposes
-          "Binance Coin", //A white lie for display purposes
-          undefined, //TODO logo
-          true //isNativeAsset
-        );
-      });
+      const balanceInEth = ethers.utils.formatEther(balanceInWei);
+      return createParsedTokenAccount(
+        signerAddress, //public key
+        WBNB_ADDRESS, //Mint key, On the other side this will be WBNB, so this is hopefully a white lie.
+        balanceInWei.toString(), //amount, in wei
+        WBNB_DECIMALS, //Luckily both BNB and WBNB have 18 decimals, so this should not be an issue.
+        parseFloat(balanceInEth), //This loses precision, but is a limitation of the current datamodel. This field is essentially deprecated
+        balanceInEth.toString(), //This is the actual display field, which has full precision.
+        "BNB", //A white lie for display purposes
+        "Binance Coin", //A white lie for display purposes
+        undefined, //TODO logo
+        true //isNativeAsset
+      );
+    });
 };
 
+const createNativeOneParsedTokenAccount = (
+  provider: Provider,
+  signerAddress: string | undefined
+) => {
+  return !(provider && signerAddress)
+    ? Promise.reject()
+    : provider.getBalance(signerAddress).then((balanceInWei) => {
+      const balanceInEth = ethers.utils.formatEther(balanceInWei);
+      return createParsedTokenAccount(
+        signerAddress, //public key
+        WONE_ADDRESS, //Mint key, On the other side this will be WBNB, so this is hopefully a white lie.
+        balanceInWei.toString(), //amount, in wei
+        WONE_DECIMALS, //Luckily both BNB and WBNB have 18 decimals, so this should not be an issue.
+        parseFloat(balanceInEth), //This loses precision, but is a limitation of the current datamodel. This field is essentially deprecated
+        balanceInEth.toString(), //This is the actual display field, which has full precision.
+        "ONE", //A white lie for display purposes
+        "One Coin", //A white lie for display purposes
+        undefined, //TODO logo
+        true //isNativeAsset
+      );
+    });
+};
 const createNFTParsedTokenAccountFromCovalent = (
   walletAddress: string,
   covalent: CovalentData,
@@ -419,8 +444,8 @@ function useGetAvailableTokens(nft: boolean = false) {
   const currentSourceWalletAddress: string | undefined = isEVMChain(lookupChain)
     ? signerAddress
     : lookupChain === CHAIN_ID_SOLANA
-    ? solPK?.toString()
-    : undefined;
+      ? solPK?.toString()
+      : undefined;
 
   const resetSourceAccounts = useCallback(() => {
     dispatch(
@@ -477,13 +502,13 @@ function useGetAvailableTokens(nft: boolean = false) {
       }
     }
 
-    return () => {};
+    return () => { };
   }, [dispatch, solanaWallet, lookupChain, solPK, tokenAccounts, nft]);
 
   //Solana Mint Accounts lookup
   useEffect(() => {
     if (lookupChain !== CHAIN_ID_SOLANA || !tokenAccounts.data?.length) {
-      return () => {};
+      return () => { };
     }
 
     let cancelled = false;
@@ -601,6 +626,41 @@ function useGetAvailableTokens(nft: boolean = false) {
     };
   }, [lookupChain, provider, signerAddress, nft, ethNativeAccount]);
 
+
+  //Harmony One Chain native asset load
+  useEffect(() => {
+    let cancelled = false;
+    if (
+      signerAddress &&
+      lookupChain === CHAIN_ID_ONE &&
+      !ethNativeAccount &&
+      !nft
+    ) {
+      setEthNativeAccountLoading(true);
+      createNativeOneParsedTokenAccount(provider, signerAddress).then(
+        (result) => {
+          console.log("create native account returned with value", result);
+          if (!cancelled) {
+            setEthNativeAccount(result);
+            setEthNativeAccountLoading(false);
+            setEthNativeAccountError("");
+          }
+        },
+        (error) => {
+          if (!cancelled) {
+            setEthNativeAccount(undefined);
+            setEthNativeAccountLoading(false);
+            setEthNativeAccountError("Unable to retrieve your ONE balance.");
+          }
+        }
+      );
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [lookupChain, provider, signerAddress, nft, ethNativeAccount]);
+
   //Ethereum covalent accounts load
   useEffect(() => {
     //const testWallet = "0xf60c2ea62edbfe808163751dd0d8693dcb30019c";
@@ -628,26 +688,26 @@ function useGetAvailableTokens(nft: boolean = false) {
             dispatch(
               nft
                 ? receiveSourceParsedTokenAccountsNFT(
-                    accounts.reduce((arr, current) => {
-                      if (current.nft_data) {
-                        current.nft_data.forEach((x) =>
-                          arr.push(
-                            createNFTParsedTokenAccountFromCovalent(
-                              walletAddress,
-                              current,
-                              x
-                            )
+                  accounts.reduce((arr, current) => {
+                    if (current.nft_data) {
+                      current.nft_data.forEach((x) =>
+                        arr.push(
+                          createNFTParsedTokenAccountFromCovalent(
+                            walletAddress,
+                            current,
+                            x
                           )
-                        );
-                      }
-                      return arr;
-                    }, [] as NFTParsedTokenAccount[])
-                  )
+                        )
+                      );
+                    }
+                    return arr;
+                  }, [] as NFTParsedTokenAccount[])
+                )
                 : receiveSourceParsedTokenAccounts(
-                    accounts.map((x) =>
-                      createParsedTokenAccountFromCovalent(walletAddress, x)
-                    )
+                  accounts.map((x) =>
+                    createParsedTokenAccountFromCovalent(walletAddress, x)
                   )
+                )
             );
         },
         () => {
@@ -655,11 +715,11 @@ function useGetAvailableTokens(nft: boolean = false) {
             dispatch(
               nft
                 ? errorSourceParsedTokenAccountsNFT(
-                    "Cannot load your Ethereum NFTs at the moment."
-                  )
+                  "Cannot load your Ethereum NFTs at the moment."
+                )
                 : errorSourceParsedTokenAccounts(
-                    "Cannot load your Ethereum tokens at the moment."
-                  )
+                  "Cannot load your Ethereum tokens at the moment."
+                )
             );
           !cancelled &&
             setCovalentError("Cannot load your Ethereum tokens at the moment.");
@@ -675,7 +735,7 @@ function useGetAvailableTokens(nft: boolean = false) {
 
   //Terra accounts load
   //At present, we don't have any mechanism for doing this.
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   const ethAccounts = useMemo(() => {
     const output = { ...tokenAccounts };
@@ -693,17 +753,17 @@ function useGetAvailableTokens(nft: boolean = false) {
 
   return lookupChain === CHAIN_ID_SOLANA
     ? {
-        tokenAccounts: tokenAccounts,
-        mintAccounts: {
-          data: solanaMintAccounts,
-          isFetching: solanaMintAccountsLoading,
-          error: solanaMintAccountsError,
-          receivedAt: null, //TODO
-        },
-        resetAccounts: resetSourceAccounts,
-      }
+      tokenAccounts: tokenAccounts,
+      mintAccounts: {
+        data: solanaMintAccounts,
+        isFetching: solanaMintAccountsLoading,
+        error: solanaMintAccountsError,
+        receivedAt: null, //TODO
+      },
+      resetAccounts: resetSourceAccounts,
+    }
     : isEVMChain(lookupChain)
-    ? {
+      ? {
         tokenAccounts: ethAccounts,
         covalent: {
           data: covalent,
@@ -713,11 +773,11 @@ function useGetAvailableTokens(nft: boolean = false) {
         },
         resetAccounts: resetSourceAccounts,
       }
-    : lookupChain === CHAIN_ID_TERRA
-    ? {
-        resetAccounts: resetSourceAccounts,
-      }
-    : undefined;
+      : lookupChain === CHAIN_ID_TERRA
+        ? {
+          resetAccounts: resetSourceAccounts,
+        }
+        : undefined;
 }
 
 export default useGetAvailableTokens;

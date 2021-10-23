@@ -16,11 +16,9 @@ module.exports = async function (callback) {
             from: accounts[0],
             gasLimit: 2000000
         });
-
         callback();
     }
     catch (e) {
         callback(e);
     }
 }
-

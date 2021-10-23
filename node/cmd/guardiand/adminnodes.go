@@ -3,14 +3,15 @@ package guardiand
 import (
 	"context"
 	"fmt"
-	publicrpcv1 "github.com/certusone/wormhole/node/pkg/proto/publicrpc/v1"
-	"github.com/certusone/wormhole/node/pkg/vaa"
-	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"sort"
 	"text/tabwriter"
 	"time"
+
+	publicrpcv1 "github.com/certusone/wormhole/node/pkg/proto/publicrpc/v1"
+	"github.com/certusone/wormhole/node/pkg/vaa"
+	"github.com/spf13/cobra"
 )
 
 // How to test in container:
@@ -65,9 +66,9 @@ func runListNodes(cmd *cobra.Command, args []string) {
 	w := tabwriter.NewWriter(os.Stdout, 0, 8, 2, ' ', 0)
 
 	if showDetails {
-		_, _ = w.Write([]byte("Node key\tGuardian key\tNode name\tVersion\tLast seen\tUptime\tSolana\tEthereum\tTerra\tBSC\n"))
+		_, _ = w.Write([]byte("Node key\tGuardian key\tNode name\tVersion\tLast seen\tUptime\tSolana\tEthereum\tTerra\tBSC\tONE\n"))
 	} else {
-		_, _ = w.Write([]byte("Node key\tGuardian key\tNode name\tVersion\tLast seen\tSolana\tEthereum\tTerra\tBSC\n"))
+		_, _ = w.Write([]byte("Node key\tGuardian key\tNode name\tVersion\tLast seen\tSolana\tEthereum\tTerra\tBSC\tONE\n"))
 	}
 
 	for _, h := range nodes {
@@ -112,6 +113,9 @@ func runListNodes(cmd *cobra.Command, args []string) {
 				truncAddrs[vaa.ChainIDBSC],
 				heights[vaa.ChainIDBSC],
 				errors[vaa.ChainIDBSC],
+				truncAddrs[vaa.ChainIDONE],
+				heights[vaa.ChainIDONE],
+				errors[vaa.ChainIDONE],
 			)
 		} else {
 			fmt.Fprintf(w,
@@ -125,6 +129,7 @@ func runListNodes(cmd *cobra.Command, args []string) {
 				heights[vaa.ChainIDEthereum],
 				heights[vaa.ChainIDTerra],
 				heights[vaa.ChainIDBSC],
+				heights[vaa.ChainIDONE],
 			)
 		}
 	}

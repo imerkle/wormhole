@@ -1,6 +1,6 @@
 import yargs from "yargs";
 
-const {hideBin} = require('yargs/helpers')
+const { hideBin } = require('yargs/helpers')
 
 import * as bridge from "bridge";
 import * as elliptic from "elliptic";
@@ -8,12 +8,12 @@ import * as ethers from "ethers";
 import * as token_bridge from "token-bridge";
 import * as web3s from '@solana/web3.js';
 
-import {fromUint8Array} from "js-base64";
-import {BridgeImplementation__factory} from "./src/ethers-contracts";
-import {LCDClient, MnemonicKey} from '@terra-money/terra.js';
-import {MsgExecuteContract} from "@terra-money/terra.js";
-import {PublicKey, TransactionInstruction, AccountMeta, Keypair, Connection} from "@solana/web3.js";
-import {solidityKeccak256} from "ethers/lib/utils";
+import { fromUint8Array } from "js-base64";
+import { BridgeImplementation__factory } from "./src/ethers-contracts";
+import { LCDClient, MnemonicKey } from '@terra-money/terra.js';
+import { MsgExecuteContract } from "@terra-money/terra.js";
+import { PublicKey, TransactionInstruction, AccountMeta, Keypair, Connection } from "@solana/web3.js";
+import { solidityKeccak256 } from "ethers/lib/utils";
 
 const signAndEncodeVM = function (
     timestamp,
@@ -43,7 +43,7 @@ const signAndEncodeVM = function (
     for (let i in signers) {
         const ec = new elliptic.ec("secp256k1");
         const key = ec.keyFromPrivate(signers[i]);
-        const signature = key.sign(Buffer.from(hash.substr(2), "hex"), {canonical: true});
+        const signature = key.sign(Buffer.from(hash.substr(2), "hex"), { canonical: true });
 
         const packSig = [
             ethers.utils.defaultAbiCoder.encode(["uint8"], [i]).substring(2 + (64 - 2)),
@@ -169,7 +169,7 @@ yargs(hideBin(process.argv))
                     data: fromUint8Array(vaa)
                 },
             },
-            {uluna: 1000}
+            { uluna: 1000 }
         );
 
         wallet

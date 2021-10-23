@@ -86,6 +86,7 @@ const SEO: React.FC<Props> = ({ children, description = '', title }) => {
                   "ETH wormhole",
                   "binance wormhole",
                   "BSC wormhole",
+                  "ONE wormhole",
                   "certus one wormhole"
                 ],
                 "description": "A cross-chain messaging protocol.",

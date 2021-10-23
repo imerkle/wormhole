@@ -63,27 +63,32 @@ spec:
             - name: BIGTABLE_EMULATOR_HOST
               value: bigtable-emulator:8086
           command:
-# Uncomment this to enable in-place debugging using dlv
-# (not suitable for regular development since the process will no longer restart on its own)
-#
-#            - /dlv
-#            - --listen=0.0.0.0:2345
-#            - --accept-multiclient
-#            - --headless=true
-#            - --api-version=2
-#            - --continue=true
-#            - exec
+            # Uncomment this to enable in-place debugging using dlv
+            # (not suitable for regular development since the process will no longer restart on its own)
+            #
+            #            - /dlv
+            #            - --listen=0.0.0.0:2345
+            #            - --accept-multiclient
+            #            - --headless=true
+            #            - --api-version=2
+            #            - --continue=true
+            #            - exec
             - /guardiand
-#            - --
+            #            - --
             - node
             - --ethRPC
             - ws://eth-devnet:8545
             - --bscRPC
             - ws://eth-devnet2:8545
+            - --oneRPC
+            - ws://eth-devnet3:8545
+            #- wss://ws.s0.pops.one
             - --terraWS
             - ws://terra-terrad:26657/websocket
             - --terraLCD
             - http://terra-lcd:1317
+            #- --oneContract
+            #- "0xec3958a29DAa21BccF73a507c4e1B958678f5355"
             - --terraContract
             - terra18vd8fpwxzck93qlwghaj6arh4p7c5n896xzem5
             - --solanaContract
@@ -103,7 +108,7 @@ spec:
             - /tmp/admin.sock
             - --dataDir
             - /tmp/data
-#            - --logLevel=debug
+          #            - --logLevel=debug
           securityContext:
             capabilities:
               add:

@@ -14,7 +14,7 @@ import { ReactComponent as TerraIcon } from '~/icons/terra.svg';
 
 import './GuardiansTable.less'
 
-const networkEnums = ['', 'Solana', 'Ethereum', 'Terra', 'BSC']
+const networkEnums = ['', 'Solana', 'Ethereum', 'Terra', 'BSC', 'ONE']
 const networkIcons = [
   <></>,
   <SolanaIcon key="1" style={{ height: 18, maxWidth: 18, margin: '0 4px' }} />,

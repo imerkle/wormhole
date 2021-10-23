@@ -268,8 +268,8 @@ export default function EthereumSourceTokenSelector(
           if (!cancelled) {
             result
               ? setAutocompleteError(
-                  "Wormhole v1 tokens cannot be transferred with this bridge."
-                )
+                "Wormhole v1 tokens cannot be transferred with this bridge."
+              )
               : onChange(autocompleteHolder);
           }
         },
@@ -415,7 +415,7 @@ export default function EthereumSourceTokenSelector(
                   }
                 );
               },
-              (error) => {}
+              (error) => { }
             )
           );
         }
@@ -527,27 +527,25 @@ export default function EthereumSourceTokenSelector(
         renderOption={(option) => {
           return nft
             ? renderNFTAccount(
-                option,
-                covalent?.data?.find(
-                  (x) => x.contract_address === option.mintKey
-                ),
-                classes
-              )
+              option,
+              covalent?.data?.find(
+                (x) => x.contract_address === option.mintKey
+              ),
+              classes
+            )
             : renderAccount(
-                option,
-                covalent?.data?.find(
-                  (x) => x.contract_address === option.mintKey
-                ),
-                classes
-              );
+              option,
+              covalent?.data?.find(
+                (x) => x.contract_address === option.mintKey
+              ),
+              classes
+            );
         }}
         getOptionLabel={(option) => {
           const symbol = getSymbol(option);
-          return `${symbol ? symbol : "Unknown"} ${
-            nft && option.name ? option.name : ""
-          } (Address: ${shortenAddress(option.mintKey)}${
-            nft ? `, ID: ${option.tokenId}` : ""
-          })`;
+          return `${symbol ? symbol : "Unknown"} ${nft && option.name ? option.name : ""
+            } (Address: ${shortenAddress(option.mintKey)}${nft ? `, ID: ${option.tokenId}` : ""
+            })`;
         }}
       />
     </>

@@ -1,5 +1,6 @@
 import {
   ChainId,
+  CHAIN_ID_ONE,
   CHAIN_ID_BSC,
   CHAIN_ID_ETH,
   CHAIN_ID_SOLANA,
@@ -34,28 +35,27 @@ export default function ShowTx({
       (chainId === CHAIN_ID_SOLANA || chainId === CHAIN_ID_TERRA));
   const explorerAddress =
     chainId === CHAIN_ID_ETH
-      ? `https://${CLUSTER === "testnet" ? "goerli." : ""}etherscan.io/tx/${
-          tx?.id
-        }`
+      ? `https://${CLUSTER === "testnet" ? "goerli." : ""}etherscan.io/tx/${tx?.id
+      }`
       : chainId === CHAIN_ID_BSC
-      ? `https://bscscan.com/tx/${tx?.id}`
-      : chainId === CHAIN_ID_SOLANA
-      ? `https://explorer.solana.com/tx/${tx?.id}${
-          CLUSTER === "testnet"
-            ? "?cluster=testnet"
-            : CLUSTER === "devnet"
-            ? "?cluster=custom&customUrl=http%3A%2F%2Flocalhost%3A8899"
-            : ""
-        }`
-      : chainId === CHAIN_ID_TERRA
-      ? `https://finder.terra.money/${
-          CLUSTER === "devnet"
-            ? "localterra"
-            : CLUSTER === "testnet"
-            ? "bombay-12"
-            : "columbus-5"
-        }/tx/${tx?.id}`
-      : undefined;
+        ? `https://bscscan.com/tx/${tx?.id}`
+        : chainId === CHAIN_ID_ONE
+          ? `https://explorer.harmony.one/tx/${tx?.id}`
+          : chainId === CHAIN_ID_SOLANA
+            ? `https://explorer.solana.com/tx/${tx?.id}${CLUSTER === "testnet"
+              ? "?cluster=testnet"
+              : CLUSTER === "devnet"
+                ? "?cluster=custom&customUrl=http%3A%2F%2Flocalhost%3A8899"
+                : ""
+            }`
+            : chainId === CHAIN_ID_TERRA
+              ? `https://finder.terra.money/${CLUSTER === "devnet"
+                ? "localterra"
+                : CLUSTER === "testnet"
+                  ? "bombay-12"
+                  : "columbus-5"
+              }/tx/${tx?.id}`
+              : undefined;
   const explorerName = getExplorerName(chainId);
 
   return (

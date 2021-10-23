@@ -16,6 +16,10 @@ const addresses = {
         token: ['BSC Token Bridge', process.env.BSC_TOKEN_BRIDGE],
         core: ['BSC Core Bridge', process.env.BSC_CORE_BRIDGE],
     },
+    one: {
+        token: ['ONE Token Bridge', process.env.ONE_TOKEN_BRIDGE],
+        core: ['ONE Core Bridge', process.env.ONE_CORE_BRIDGE],
+    },
 }
 enum ChainID {
     Solana,

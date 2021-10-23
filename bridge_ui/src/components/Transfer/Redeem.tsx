@@ -1,4 +1,5 @@
 import {
+  CHAIN_ID_ONE,
   CHAIN_ID_BSC,
   CHAIN_ID_ETH,
   CHAIN_ID_SOLANA,
@@ -13,7 +14,7 @@ import {
   selectTransferTargetAsset,
   selectTransferTargetChain,
 } from "../../store/selectors";
-import { WBNB_ADDRESS, WETH_ADDRESS } from "../../utils/consts";
+import { WONE_ADDRESS, WBNB_ADDRESS, WETH_ADDRESS } from "../../utils/consts";
 import ButtonWithLoader from "../ButtonWithLoader";
 import KeyAndBalance from "../KeyAndBalance";
 import StepDescription from "../StepDescription";
@@ -34,11 +35,15 @@ function Redeem() {
     targetChain === CHAIN_ID_BSC &&
     targetAsset &&
     targetAsset.toLowerCase() === WBNB_ADDRESS.toLowerCase();
+  const isOneNative =
+    targetChain === CHAIN_ID_ONE &&
+    targetAsset &&
+    targetAsset.toLowerCase() === WONE_ADDRESS.toLowerCase();
   const isSolNative =
     targetChain === CHAIN_ID_SOLANA &&
     targetAsset &&
     targetAsset === WSOL_ADDRESS;
-  const isNativeEligible = isEthNative || isBscNative || isSolNative;
+  const isNativeEligible = isEthNative || isBscNative || isOneNative || isSolNative;
   const [useNativeRedeem, setUseNativeRedeem] = useState(true);
   const toggleNativeRedeem = useCallback(() => {
     setUseNativeRedeem(!useNativeRedeem);

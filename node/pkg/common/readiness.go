@@ -7,4 +7,5 @@ const (
 	ReadinessSolanaSyncing readiness.Component = "solanaSyncing"
 	ReadinessTerraSyncing  readiness.Component = "terraSyncing"
 	ReadinessBSCSyncing    readiness.Component = "bscSyncing"
+	ReadinessONESyncing    readiness.Component = "oneSyncing"
 )

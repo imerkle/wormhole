@@ -4,6 +4,7 @@ import {
   CHAIN_ID_ETH,
   CHAIN_ID_SOLANA,
   CHAIN_ID_TERRA,
+  CHAIN_ID_ONE,
 } from "./consts";
 import { humanAddress } from "../terra";
 import { PublicKey } from "@solana/web3.js";
@@ -21,14 +22,14 @@ export const hexToNativeString = (h: string | undefined, c: ChainId) => {
     return !h
       ? undefined
       : c === CHAIN_ID_SOLANA
-      ? new PublicKey(hexToUint8Array(h)).toString()
-      : c === CHAIN_ID_ETH || c === CHAIN_ID_BSC
-      ? hexZeroPad(hexValue(hexToUint8Array(h)), 20)
-      : c === CHAIN_ID_TERRA
-      ? isHexNativeTerra(h)
-        ? nativeTerraHexToDenom(h)
-        : humanAddress(hexToUint8Array(h.substr(24))) // terra expects 20 bytes, not 32
-      : h;
-  } catch (e) {}
+        ? new PublicKey(hexToUint8Array(h)).toString()
+        : c === CHAIN_ID_ETH || c === CHAIN_ID_BSC || c === CHAIN_ID_ONE
+          ? hexZeroPad(hexValue(hexToUint8Array(h)), 20)
+          : c === CHAIN_ID_TERRA
+            ? isHexNativeTerra(h)
+              ? nativeTerraHexToDenom(h)
+              : humanAddress(hexToUint8Array(h.substr(24))) // terra expects 20 bytes, not 32
+            : h;
+  } catch (e) { }
   return undefined;
 };

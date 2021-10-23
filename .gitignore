@@ -10,3 +10,4 @@ venv
 .env
 bigtable-admin.json
 bigtable-writer.json
+clients/token_bridge/main.js

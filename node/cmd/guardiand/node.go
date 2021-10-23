@@ -3,13 +3,14 @@ package guardiand
 import (
 	"context"
 	"fmt"
-	"github.com/certusone/wormhole/node/pkg/notify/discord"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
 	"path"
 	"syscall"
+
+	"github.com/certusone/wormhole/node/pkg/notify/discord"
 
 	"github.com/certusone/wormhole/node/pkg/db"
 	"github.com/gagliardetto/solana-go/rpc"
@@ -65,6 +66,9 @@ var (
 	bscRPC      *string
 	bscContract *string
 
+	oneRPC      *string
+	oneContract *string
+
 	terraWS       *string
 	terraLCD      *string
 	terraContract *string
@@ -117,6 +121,9 @@ func init() {
 
 	bscRPC = NodeCmd.Flags().String("bscRPC", "", "Binance Smart Chain RPC URL")
 	bscContract = NodeCmd.Flags().String("bscContract", "", "Binance Smart Chain contract address")
+
+	oneRPC = NodeCmd.Flags().String("oneRPC", "", "Harmony One RPC URL")
+	oneContract = NodeCmd.Flags().String("oneContract", "", "Harmony One contract address")
 
 	terraWS = NodeCmd.Flags().String("terraWS", "", "Path to terrad root for websocket connection")
 	terraLCD = NodeCmd.Flags().String("terraLCD", "", "Path to LCD service root for http calls")
@@ -279,6 +286,8 @@ func runNode(cmd *cobra.Command, args []string) {
 		// Deterministic ganache ETH devnet address.
 		*ethContract = devnet.GanacheWormholeContractAddress.Hex()
 		*bscContract = devnet.GanacheWormholeContractAddress.Hex()
+		//comment if test
+		*oneContract = devnet.GanacheWormholeContractAddress.Hex()
 
 		// Use the hostname as nodeName. For production, we don't want to do this to
 		// prevent accidentally leaking sensitive hostnames.
@@ -314,6 +323,12 @@ func runNode(cmd *cobra.Command, args []string) {
 	}
 	if *bscContract == "" {
 		logger.Fatal("Please specify --bscContract")
+	}
+	if *oneRPC == "" {
+		logger.Fatal("Please specify --oneRPC")
+	}
+	if *oneContract == "" {
+		logger.Fatal("Please specify --oneContract")
 	}
 	if *nodeName == "" {
 		logger.Fatal("Please specify --nodeName")
@@ -356,6 +371,7 @@ func runNode(cmd *cobra.Command, args []string) {
 
 	ethContractAddr := eth_common.HexToAddress(*ethContract)
 	bscContractAddr := eth_common.HexToAddress(*bscContract)
+	oneContractAddr := eth_common.HexToAddress(*oneContract)
 	solAddress, err := solana_types.PublicKeyFromBase58(*solanaContract)
 	if err != nil {
 		logger.Fatal("invalid Solana contract address", zap.Error(err))
@@ -480,6 +496,10 @@ func runNode(cmd *cobra.Command, args []string) {
 
 		if err := supervisor.Run(ctx, "bscwatch",
 			ethereum.NewEthWatcher(*bscRPC, bscContractAddr, "bsc", common.ReadinessBSCSyncing, vaa.ChainIDBSC, lockC, nil).Run); err != nil {
+			return err
+		}
+		if err := supervisor.Run(ctx, "onewatch",
+			ethereum.NewEthWatcher(*oneRPC, oneContractAddr, "one", common.ReadinessONESyncing, vaa.ChainIDONE, lockC, nil).Run); err != nil {
 			return err
 		}
 

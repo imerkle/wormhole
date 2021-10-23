@@ -50,15 +50,15 @@ async function evm(
   try {
     const receipt = isNative
       ? await redeemOnEthNative(
-          getTokenBridgeAddressForChain(chainId),
-          signer,
-          signedVAA
-        )
+        getTokenBridgeAddressForChain(chainId),
+        signer,
+        signedVAA
+      )
       : await redeemOnEth(
-          getTokenBridgeAddressForChain(chainId),
-          signer,
-          signedVAA
-        );
+        getTokenBridgeAddressForChain(chainId),
+        signer,
+        signedVAA
+      );
     dispatch(
       setRedeemTx({ id: receipt.transactionHash, block: receipt.blockNumber })
     );
@@ -93,19 +93,19 @@ async function solana(
     // TODO: how do we retry in between these steps
     const transaction = isNative
       ? await redeemAndUnwrapOnSolana(
-          connection,
-          SOL_BRIDGE_ADDRESS,
-          SOL_TOKEN_BRIDGE_ADDRESS,
-          payerAddress,
-          signedVAA
-        )
+        connection,
+        SOL_BRIDGE_ADDRESS,
+        SOL_TOKEN_BRIDGE_ADDRESS,
+        payerAddress,
+        signedVAA
+      )
       : await redeemOnSolana(
-          connection,
-          SOL_BRIDGE_ADDRESS,
-          SOL_TOKEN_BRIDGE_ADDRESS,
-          payerAddress,
-          signedVAA
-        );
+        connection,
+        SOL_BRIDGE_ADDRESS,
+        SOL_TOKEN_BRIDGE_ADDRESS,
+        payerAddress,
+        signedVAA
+      );
     const txid = await signSendAndConfirm(wallet, connection, transaction);
     // TODO: didn't want to make an info call we didn't need, can we get the block without it by modifying the above call?
     dispatch(setRedeemTx({ id: txid, block: 1 }));

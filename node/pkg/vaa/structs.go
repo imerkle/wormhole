@@ -106,6 +106,8 @@ const (
 	ChainIDTerra ChainID = 3
 	// ChainIDBSC is the ChainID of Binance Smart Chain
 	ChainIDBSC ChainID = 4
+	// ChainIDONE is the ChainID of Harmony One
+	ChainIDONE ChainID = 5
 
 	minVAALength        = 1 + 4 + 52 + 4 + 1 + 1
 	SupportedVAAVersion = 0x01

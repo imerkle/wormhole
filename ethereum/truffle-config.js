@@ -9,7 +9,7 @@ module.exports = {
             network_id: "*",
         },
         mainnet: {
-            provider: () => new HDWalletProvider(process.env.MNEMONIC, `https://mainnet.infura.io/v3/`+process.env.INFURA_KEY),
+            provider: () => new HDWalletProvider(process.env.MNEMONIC, `https://mainnet.infura.io/v3/` + process.env.INFURA_KEY),
             network_id: 1,
             gas: 10000000,
             gasPrice: 101000000000,
@@ -18,7 +18,7 @@ module.exports = {
             skipDryRun: false
         },
         rinkeby: {
-            provider: () => new HDWalletProvider(process.env.MNEMONIC, `https://rinkeby.infura.io/v3/`+process.env.INFURA_KEY),
+            provider: () => new HDWalletProvider(process.env.MNEMONIC, `https://rinkeby.infura.io/v3/` + process.env.INFURA_KEY),
             network_id: 4,
             gas: 5500000,
             confirmations: 2,
@@ -27,7 +27,7 @@ module.exports = {
         },
         goerli: {
             provider: () => {
-                return new HDWalletProvider(process.env.MNEMONIC, 'https://goerli.infura.io/v3/'+process.env.INFURA_KEY)
+                return new HDWalletProvider(process.env.MNEMONIC, 'https://goerli.infura.io/v3/' + process.env.INFURA_KEY)
             },
             network_id: '5',
             gas: 4465030,
@@ -41,16 +41,27 @@ module.exports = {
             gas: 70000000,
             gasPrice: 8000000000,
         },
+        harmony_test_0: {
+            provider: () => {
+                return new HDWalletProvider(process.env.MNEMONIC, 'https://api.s0.b.hmny.io')
+            },
+            network_id: '1666700000',
+            gas: 70000000,
+            gasPrice: 8000000000,
+            timeoutBlocks: 200,
+            networkCheckTimeout: 1000000,
+            confirmations: 10,
+        },
     },
 
     compilers: {
         solc: {
             version: "0.8.4",
             settings: {
-                 optimizer: {
-                   enabled: true,
-                   runs: 200
-                 },
+                optimizer: {
+                    enabled: true,
+                    runs: 200
+                },
             }
         }
     },
